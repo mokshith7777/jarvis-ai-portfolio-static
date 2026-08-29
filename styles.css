@@ -28,13 +28,7 @@ body {
   overflow: hidden;
 }
 #bg-image {
-  position: absolute;
-  inset: 0;
-  background: url("./reference/hero-reference.jpg") center / cover no-repeat;
-  opacity: 0.18;
-  filter: saturate(1.2) blur(1px);
-  transform: scale(1.05);
-  transition: opacity 1.2s ease;
+  display: none; /* replaced by live 3D emblems (Arc Reactor + Spidey + Prabhas motifs) */
 }
 #bg canvas { display: block; position: relative; z-index: 1; }
 
