@@ -1,0 +1,10 @@
+# Node
+node_modules/
+
+# Local dev
+.DS_Store
+*.log
+
+# Reference assets (keep brief, ignore large binaries if any)
+reference/*.jpg
+reference/*.png

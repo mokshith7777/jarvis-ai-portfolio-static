@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS AI — Cinematic 3D Portfolio</title>
+  <meta name="description" content="JARVIS AI — a voice-first AI, built by Mokshith Reddy. Cinematic 3D portfolio." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Three.js via CDN ESM importmap (no build step). Local dev needs http: run
+       `python3 -m http.server` then open http://localhost:8000 -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Fixed 3D background canvas -->
+  <div id="bg" aria-hidden="true"></div>
+
+  <!-- Top navigation -->
+  <nav id="nav">
+    <a class="brand" href="#home">JARVIS<span>AI</span></a>
+    <ul>
+      <li><a href="#home" data-target="home">Home</a></li>
+      <li><a href="#about" data-target="about">About</a></li>
+      <li><a href="#work" data-target="work">Work</a></li>
+      <li><a href="#craft" data-target="craft">Craft</a></li>
+      <li><a href="#owner" data-target="owner">Owner</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- 1. HERO -->
+    <section id="home" class="panel hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Voice-first artificial intelligence</p>
+        <h1 class="wordmark">JARVIS<span>AI</span></h1>
+        <p class="tagline" id="chapter">An assistant that feels less like software — more like a collaborator.</p>
+      </div>
+      <div class="scroll-hint">scroll to enter ↓</div>
+    </section>
+
+    <!-- 2. ABOUT JARVIS -->
+    <section id="about" class="panel">
+      <div class="card reveal">
+        <h2>About JARVIS</h2>
+        <p>JARVIS is a voice-first AI built to live inside your day — answering, acting, and
+          anticipating in natural language. It runs on edge inference for speed and privacy,
+          and on a chat surface when you want to see the work.</p>
+        <p>Designed to feel calm and capable: a single intelligent core, surrounded by the
+          systems that keep it fast, secure, and human.</p>
+      </div>
+    </section>
+
+    <!-- 3. SHOWCASE -->
+    <section id="work" class="panel">
+      <div class="card reveal">
+        <h2>Work</h2>
+        <div class="grid">
+          <a class="project" href="https://jarvis-ai-3ba39.web.app" target="_blank" rel="noopener">
+            <h3>JARVIS AI</h3>
+            <p>Voice-first assistant on Firebase + Cloudflare edge, Groq inference.</p>
+            <span class="link">Open →</span>
+          </a>
+          <div class="project">
+            <h3>Edge Inference Kit</h3>
+            <p>Low-latency model routing across free-tier providers.</p>
+            <span class="link">Soon →</span>
+          </div>
+          <div class="project">
+            <h3>Ambient UI</h3>
+            <p>Cinematic, motion-led interfaces for chat products.</p>
+            <span class="link">Soon →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. STORY / CRAFT -->
+    <section id="craft" class="panel">
+      <div class="card reveal">
+        <h2>Craft</h2>
+        <p>Built free-tier-first: Groq for dev inference, Cloudflare Workers for the edge,
+          Firebase for auth and realtime. Every choice optimised for speed, cost, and a
+          premium feel — no heavy frameworks where a sharp interface will do.</p>
+      </div>
+    </section>
+
+    <!-- 5. OWNER -->
+    <section id="owner" class="panel">
+      <div class="card reveal owner">
+        <p class="eyebrow">Creator</p>
+        <h2>Mokshith Reddy</h2>
+        <p class="role">Founder &amp; Owner of JARVIS AI</p>
+        <p>I build voice-first AI from the model up — the person behind JARVIS. This site is
+          the portfolio of that work: a cinematic, futuristic interface for an assistant meant
+          to feel less like software and more like a collaborator.</p>
+
+        <form id="contact" class="contact" action="https://api.web3forms.com/submit" method="POST">
+          <!-- REPLACE with your free Web3Forms access key: https://web3forms.com -->
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY" />
+          <input type="hidden" name="subject" value="JARVIS AI portfolio contact" />
+          <input type="email" name="email" placeholder="Your email" required />
+          <textarea name="message" placeholder="Say hello" required></textarea>
+          <button type="submit">Send</button>
+          <p class="form-note" id="form-note"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
