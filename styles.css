@@ -27,8 +27,7 @@ body {
   background: radial-gradient(ellipse at 50% 40%, #0a1322 0%, var(--void) 70%);
   overflow: hidden;
 }
-#bg-image { display: none; } /* backdrop now rendered inside WebGL (main.js backdrop plane) */
-#bg canvas { display: block; position: relative; z-index: 1; }
+#bg canvas { display: block; position: relative; z-index: 1; width: 100%; height: 100%; }
 
 /* Nav */
 #nav {
