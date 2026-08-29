@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 // ---------------------------------------------------------------------------
 const bg = document.getElementById('bg');
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x05070d, 0.045);
+scene.fog = new THREE.FogExp2(0x02060c, 0.04);
 
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 0, 7);
@@ -178,7 +178,7 @@ const gold = new THREE.PointLight(0xffb86b, 1.6, 24); gold.position.set(3, -2, 2
 // ---------------------------------------------------------------------------
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.0, 0.5, 0.8));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.85, 0.5, 0.72);
 
 // ---------------------------------------------------------------------------
 // Scroll + pointer
