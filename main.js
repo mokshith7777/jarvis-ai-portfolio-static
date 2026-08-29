@@ -182,3 +182,27 @@ function tick() {
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
+
+// ---------------------------------------------------------------------------
+// Contact form (Web3Forms) — submit in-page, no redirect bounce
+// ---------------------------------------------------------------------------
+const form = document.getElementById('contact');
+const note = document.getElementById('form-note');
+if (form) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    note.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      if (res.ok) {
+        note.textContent = 'Thanks — message sent.';
+        form.reset();
+      } else {
+        note.textContent = 'Something went wrong. Try again.';
+      }
+    } catch {
+      note.textContent = 'Network error. Try again.';
+    }
+  });
+}
