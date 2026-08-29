@@ -6,5 +6,4 @@ node_modules/
 *.log
 
 # Reference assets (keep brief, ignore large binaries if any)
-reference/*.jpg
 reference/*.png

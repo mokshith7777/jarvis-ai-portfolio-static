@@ -25,8 +25,18 @@ body {
   inset: 0;
   z-index: 0;
   background: radial-gradient(ellipse at 50% 40%, #0a1322 0%, var(--void) 70%);
+  overflow: hidden;
 }
-#bg canvas { display: block; }
+#bg-image {
+  position: absolute;
+  inset: 0;
+  background: url("./reference/hero-reference.jpg") center / cover no-repeat;
+  opacity: 0.18;
+  filter: saturate(1.2) blur(1px);
+  transform: scale(1.05);
+  transition: opacity 1.2s ease;
+}
+#bg canvas { display: block; position: relative; z-index: 1; }
 
 /* Nav */
 #nav {

@@ -19,57 +19,89 @@ renderer.setSize(innerWidth, innerHeight);
 bg.appendChild(renderer.domElement);
 
 // ---------------------------------------------------------------------------
-// Hero core (icosahedron + wireframe overlay)
+// ARC REACTOR hero (JARVIS) — central core + assembled metallic ring segments
 // ---------------------------------------------------------------------------
 const core = new THREE.Group();
 scene.add(core);
 
+// Central glowing core (the reactor heart)
 const coreMesh = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(1.35, 0),
+  new THREE.IcosahedronGeometry(1.0, 1),
   new THREE.MeshStandardMaterial({
-    color: 0x0b0e14, metalness: 0.9, roughness: 0.15,
-    emissive: 0x4f9dff, emissiveIntensity: 0.28
+    color: 0x0b0e14, metalness: 0.95, roughness: 0.1,
+    emissive: 0x7af6ff, emissiveIntensity: 0.5
   })
 );
 core.add(coreMesh);
 
-const wire = new THREE.Mesh(
-  coreMesh.geometry,
-  new THREE.MeshBasicMaterial({ color: 0x7af6ff, wireframe: true, transparent: true, opacity: 0.22 })
+// Inner bright plasma sphere (bloom source)
+const plasma = new THREE.Mesh(
+  new THREE.SphereGeometry(0.62, 32, 32),
+  new THREE.MeshBasicMaterial({ color: 0xaef6ff })
 );
-wire.scale.setScalar(1.03);
-core.add(wire);
+core.add(plasma);
+
+// Wireframe shell
+const shell = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(1.05, 1),
+  new THREE.MeshBasicMaterial({ color: 0x7af6ff, wireframe: true, transparent: true, opacity: 0.3 })
+);
+core.add(shell);
+
+// Metallic arc-ring segments — start scattered, assemble into a torus on scroll
+const HALO_R = 2.6;
+const SEGMENTS = 24;
+const ring = new THREE.Group();
+core.add(ring);
+const segGeo = new THREE.BoxGeometry(0.5, 0.12, 0.16);
+const segMat = new THREE.MeshStandardMaterial({ color: 0xb9c6e0, metalness: 1, roughness: 0.25, emissive: 0x123a55, emissiveIntensity: 0.3 });
+const segTargets = [];   // final assembled transform
+const segStarts = [];     // scattered start transform
+for (let i = 0; i < SEGMENTS; i++) {
+  const a = (i / SEGMENTS) * Math.PI * 2;
+  const m = new THREE.Mesh(segGeo, segMat);
+  const finalPos = new THREE.Vector3(Math.cos(a) * HALO_R, Math.sin(a) * HALO_R * 0.35, 0);
+  const finalRot = new THREE.Euler(0, 0, a + Math.PI / 2);
+  segTargets.push({ pos: finalPos, rot: finalRot });
+  // scattered start: far out, random tilt
+  const r = 5 + Math.random() * 3;
+  segStarts.push({
+    pos: new THREE.Vector3(Math.cos(a) * r, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6),
+    rot: new THREE.Euler(Math.random() * 6, Math.random() * 6, Math.random() * 6)
+  });
+  ring.add(m);
+}
 
 // ---------------------------------------------------------------------------
-// Web filaments (Spidey motif) — tubes arcing from core to halo, flex on loop
+// Web filaments (Spidey motif) — red+blue energy strands radiating from core
 // ---------------------------------------------------------------------------
 const filaments = [];
-const FILAMENT_COUNT = 12;
-const haloRadius = 2.6;
+const FILAMENT_COUNT = 14;
 for (let i = 0; i < FILAMENT_COUNT; i++) {
   const a = (i / FILAMENT_COUNT) * Math.PI * 2;
   const group = new THREE.Group();
   group.rotation.y = a;
-  const anchor = new THREE.Vector3(0, haloRadius * Math.sin(a), haloRadius * Math.cos(a) * 0.4);
+  const anchor = new THREE.Vector3(0, HALO_R * Math.sin(a), HALO_R * Math.cos(a) * 0.45);
   const curve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(0.6, haloRadius * 0.5, 0),
+    new THREE.Vector3(0.7, HALO_R * 0.5, 0),
     anchor
   ]);
-  const geo = new THREE.TubeGeometry(curve, 40, 0.012, 6, false);
-  const mat = new THREE.MeshBasicMaterial({ color: 0x7af6ff, transparent: true, opacity: 0.5 });
+  const geo = new THREE.TubeGeometry(curve, 40, 0.01, 6, false);
+  const col = i % 2 === 0 ? 0x7af6ff : 0xff3b4e; // cyan + Spidey red
+  const mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.45 });
   const mesh = new THREE.Mesh(geo, mat);
   group.add(mesh);
   core.add(group);
-  filaments.push({ group, mat, phase: i * 0.5 });
+  filaments.push({ group, mat, phase: i * 0.45 });
 }
 
 // ---------------------------------------------------------------------------
-// Golden halo (Prabhas motif) — torus ring, slow rotation
+// Golden halo (Prabhas motif) — torus ring, slow rotation, epic glow
 // ---------------------------------------------------------------------------
 const halo = new THREE.Mesh(
-  new THREE.TorusGeometry(haloRadius, 0.06, 16, 120),
-  new THREE.MeshStandardMaterial({ color: 0xffb86b, metalness: 1, roughness: 0.3, emissive: 0x6b3b00, emissiveIntensity: 0.4 })
+  new THREE.TorusGeometry(HALO_R + 0.4, 0.05, 16, 140),
+  new THREE.MeshStandardMaterial({ color: 0xffb86b, metalness: 1, roughness: 0.3, emissive: 0x6b3b00, emissiveIntensity: 0.6 })
 );
 halo.rotation.x = Math.PI / 2.3;
 core.add(halo);
@@ -162,6 +194,7 @@ function tick() {
 
   if (!reduce) {
     coreMesh.rotation.y += 0.0025; coreMesh.rotation.x += 0.0009;
+    plasma.scale.setScalar(1 + Math.sin(t * 2.2) * 0.06); // reactor pulse
     halo.rotation.z += 0.003;
     particles.rotation.y += 0.0003;
     // filament flex (swing like cables)
@@ -171,10 +204,20 @@ function tick() {
     });
   }
 
-  // Scroll-driven: push camera into core, brighten wireframe, face the halo
+  // Scroll-driven ARC REACTOR assemble: segments fly from scattered -> torus
+  const assemble = cur; // 0..1 with eased scroll
+  ring.children.forEach((m, i) => {
+    const s = segStarts[i], d = segTargets[i];
+    m.position.lerpVectors(s.pos, d.pos, assemble);
+    m.rotation.x = s.rot.x + (d.rot.x - s.rot.x) * assemble;
+    m.rotation.y = s.rot.y + (d.rot.y - s.rot.y) * assemble;
+    m.rotation.z = s.rot.z + (d.rot.z - s.rot.z) * assemble;
+  });
+  shell.material.opacity = 0.3 + cur * 0.5;
+
+  // Camera pushes toward the reactor as you scroll; halo tilts to face you
   camera.position.z = 6.5 - cur * 4.8;
   camera.position.y = cur * 0.6;
-  wire.material.opacity = 0.22 + cur * 0.45;
   halo.rotation.x = Math.PI / 2.3 - cur * 0.6;
   core.rotation.y = cur * 1.2;
 
