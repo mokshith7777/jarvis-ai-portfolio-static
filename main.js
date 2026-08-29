@@ -19,63 +19,12 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.setClearColor(0x000000, 0); // transparent so the CSS void gradient shows at edges
 bg.appendChild(renderer.domElement);
 
-// Backdrop plane: your cinematic reference image, far behind the reactor.
-// (Putting it IN the 3D scene so it's actually visible — the CSS #bg-image sits
-//  behind the opaque canvas and was never seen.)
-const texLoader = new THREE.TextureLoader();
-const backdropTex = texLoader.load('./reference/bg-ref3.jpg');
-backdropTex.colorSpace = THREE.SRGBColorSpace;
-const backdrop = new THREE.Mesh(
-  new THREE.PlaneGeometry(38, 22),
-  new THREE.MeshBasicMaterial({ map: backdropTex, transparent: true, opacity: 0.55, depthWrite: false })
-);
-backdrop.position.set(0, 0, -12);
-scene.add(backdrop);
+// Backdrop: NONE yet — waiting on user reference images. Clean dark void only.
 
 // ---------------------------------------------------------------------------
-// ARC REACTOR hero (JARVIS) — clean, premium, restrained
-//   one glowing cyan core · polished metal ring · soft bloom · dark grade
-// ---------------------------------------------------------------------------
-const core = new THREE.Group();
-scene.add(core);
+// ARC REACTOR hero: DEFERRED — waiting on user reference images.
+// (Current scene is a clean dark void + subtle particle dust until refs arrive.)
 
-// Inner plasma sphere (the glow source)
-const plasma = new THREE.Mesh(
-  new THREE.SphereGeometry(0.85, 48, 48),
-  new THREE.MeshBasicMaterial({ color: 0xcdfaff })
-);
-core.add(plasma);
-
-// Glass core shell — subtle, clean
-const shell = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(1.0, 2),
-  new THREE.MeshStandardMaterial({
-    color: 0x0c1422, metalness: 0.9, roughness: 0.15,
-    emissive: 0x7af6ff, emissiveIntensity: 0.45, transparent: true, opacity: 0.9
-  })
-);
-core.add(shell);
-
-// Outer polished metal ring — single clean torus, slowly rotating
-const ring = new THREE.Mesh(
-  new THREE.TorusGeometry(1.7, 0.10, 24, 220),
-  new THREE.MeshStandardMaterial({ color: 0xc2cede, metalness: 1.0, roughness: 0.22, emissive: 0x0e2a3a, emissiveIntensity: 0.4 })
-);
-ring.rotation.x = Math.PI / 2.1;
-core.add(ring);
-
-// Thin inner accent ring (cyan)
-const accent = new THREE.Mesh(
-  new THREE.TorusGeometry(1.32, 0.025, 16, 200),
-  new THREE.MeshBasicMaterial({ color: 0x7af6ff })
-);
-accent.rotation.x = Math.PI / 2.1;
-core.add(accent);
-
-// ---------------------------------------------------------------------------
-// Particle dust field (subtle, cyan only — no gold clutter)
-// ---------------------------------------------------------------------------
-const N = 1400;
 const pos = new Float32Array(N * 3);
 for (let i = 0; i < N; i++) {
   const r = 4 + Math.random() * 12, a = Math.random() * Math.PI * 2, b = (Math.random() - 0.5) * 8;
@@ -147,19 +96,14 @@ function tick() {
   mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
 
   if (!reduce) {
-    plasma.scale.setScalar(1 + Math.sin(t * 2.0) * 0.04);   // gentle pulse
-    shell.rotation.y += 0.0015; shell.rotation.x += 0.0007;
-    ring.rotation.z += 0.0022;                               // slow premium spin
-    accent.rotation.z -= 0.004;
     particles.rotation.y += 0.0004;
   }
 
-  // Camera + parallax (no more "assemble")
+  // Camera + parallax
   camera.position.z = 7 - cur * 3.2;
   camera.position.y = cur * 0.5 + my * 0.6;
   camera.position.x = mx * 0.8;
   camera.lookAt(0, 0, 0);
-  core.rotation.y = cur * 0.8 + mx * 0.3;
 
   composer.render();
   requestAnimationFrame(tick);
