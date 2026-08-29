@@ -4,15 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JARVIS AI — Cinematic 3D Portfolio</title>
-  <meta name="description" content="JARVIS AI — a voice-first AI, built by Mokshith Reddy. Cinematic 3D portfolio." />
+  <meta name="description" content="JARVIS AI — voice-first AI by Mokshith Reddy. Cinematic 3D portfolio: architecture, edge inference, and the story behind the build." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 
-  <!-- Three.js via CDN ESM importmap (no build step). Local dev needs http: run
-       `python3 -m http.server` then open http://localhost:8000 -->
   <script type="importmap">
   {
     "imports": {
@@ -23,20 +21,18 @@
   </script>
 </head>
 <body>
-  <!-- Fixed 3D background canvas -->
   <div id="bg" aria-hidden="true">
     <div id="bg-image"></div>
   </div>
 
-  <!-- Top navigation -->
   <nav id="nav">
     <a class="brand" href="#home">JARVIS<span>AI</span></a>
     <ul>
       <li><a href="#home" data-target="home">Home</a></li>
-      <li><a href="#about" data-target="about">About</a></li>
+      <li><a href="#why" data-target="why">Story</a></li>
       <li><a href="#work" data-target="work">Work</a></li>
-      <li><a href="#craft" data-target="craft">Craft</a></li>
       <li><a href="#owner" data-target="owner">Owner</a></li>
+      <li><a href="#contact" data-target="contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -46,68 +42,170 @@
       <div class="hero-inner">
         <p class="eyebrow">Voice-first artificial intelligence</p>
         <h1 class="wordmark">JARVIS<span>AI</span></h1>
-        <p class="tagline" id="chapter">An assistant that feels less like software — more like a collaborator.</p>
+        <p class="tagline" id="chapter">An assistant built to coordinate tools, agents and workflows — not just answer questions.</p>
+        <a class="cta" href="https://jarvis-ai-3ba39.web.app" target="_blank" rel="noopener">Open JARVIS →</a>
       </div>
-      <div class="scroll-hint">scroll to enter ↓</div>
+      <div class="scroll-hint">scroll to explore ↓</div>
     </section>
 
-    <!-- 2. ABOUT JARVIS -->
-    <section id="about" class="panel">
+    <!-- 2. WHY / STORY -->
+    <section id="why" class="panel">
       <div class="card reveal">
-        <h2>About JARVIS</h2>
-        <p>JARVIS is a voice-first AI built to live inside your day — answering, acting, and
-          anticipating in natural language. It runs on edge inference for speed and privacy,
-          and on a chat surface when you want to see the work.</p>
-        <p>Designed to feel calm and capable: a single intelligent core, surrounded by the
-          systems that keep it fast, secure, and human.</p>
+        <p class="eyebrow">Why I built it</p>
+        <h2>The story</h2>
+        <p>JARVIS started as an experiment to build an AI that could move beyond answering
+          questions and actually coordinate tools, agents and workflows. Most assistants stop
+          at the reply. JARVIS is built to act — route a request to the right model, call the
+          right tool, and return a result you can watch happen.</p>
+        <p>It runs on the edge for speed and privacy, and on a calm chat surface when you want
+          to see the work. The goal was never a bigger chatbot — it was a smaller, sharper
+          system that feels less like software and more like a collaborator.</p>
       </div>
     </section>
 
-    <!-- 3. SHOWCASE -->
+    <!-- 3. WORK (centerpiece) -->
     <section id="work" class="panel">
-      <div class="card reveal">
-        <h2>Work</h2>
-        <div class="grid">
-          <a class="project" href="https://jarvis-ai-3ba39.web.app" target="_blank" rel="noopener">
-            <h3>JARVIS AI</h3>
-            <p>Voice-first assistant on Firebase + Cloudflare edge, Groq inference.</p>
-            <span class="link">Open →</span>
-          </a>
-          <div class="project">
-            <h3>Edge Inference Kit</h3>
-            <p>Low-latency model routing across free-tier providers.</p>
-            <span class="link">Soon →</span>
+      <div class="card wide reveal">
+        <p class="eyebrow">Project</p>
+        <h2>JARVIS AI</h2>
+        <p class="lead">A voice-first AI assistant that coordinates models, tools and agents from
+          the edge.</p>
+
+        <div class="cols">
+          <div>
+            <h3>What it does</h3>
+            <ul class="spec">
+              <li>Voice + text interface on web and mobile</li>
+              <li>Routes each request to the best-fit model (Groq, OpenRouter, local)</li>
+              <li>Calls external tools and runs multi-step workflows</li>
+              <li>Edge-hosted for low latency and privacy</li>
+              <li>Firebase auth so sessions are personal and persistent</li>
+            </ul>
           </div>
-          <div class="project">
-            <h3>Ambient UI</h3>
-            <p>Cinematic, motion-led interfaces for chat products.</p>
-            <span class="link">Soon →</span>
+          <div>
+            <h3>Tech</h3>
+            <ul class="spec">
+              <li><b>Cloudflare Workers</b> — edge runtime + KV cache</li>
+              <li><b>Firebase</b> — Hosting, Auth, Google sign-in</li>
+              <li><b>Groq</b> — primary low-latency inference</li>
+              <li><b>OpenRouter / Pollinations</b> — fallback + media</li>
+              <li><b>Three.js</b> — this cinematic interface</li>
+            </ul>
           </div>
         </div>
+
+        <!-- Interface mock (CSS-rendered product UI — swap for real screenshot) -->
+        <div class="ui-mock" role="img" aria-label="JARVIS chat interface">
+          <div class="ui-bar"><span></span><span></span><span></span></div>
+          <div class="ui-body">
+            <div class="msg bot">JARVIS online. Edge link established · 12 models routed.</div>
+            <div class="msg user">Summarise these 3 docs and draft a reply.</div>
+            <div class="msg bot">Routed to Groq · 3 docs ingested · draft ready in 0.4s.
+              <span class="tool">⚙ tool: summarize ×3 → compose</span></div>
+            <div class="msg user">Send it and log the task.</div>
+            <div class="msg bot">Done. Task logged to your workspace.
+              <span class="tool">⚙ tool: send → log</span></div>
+          </div>
+        </div>
+
+        <!-- Architecture diagram (SVG, real stack) -->
+        <div class="arch" role="img" aria-label="JARVIS architecture">
+          <svg viewBox="0 0 900 220" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#7af6ff"/>
+              </marker>
+            </defs>
+            <g fill="#0b1220" stroke="#7af6ff" stroke-width="1.5">
+              <rect x="20" y="85" width="120" height="50" rx="8"/><text x="80" y="115" fill="#e8eefc" font-size="14" text-anchor="middle">User</text>
+              <rect x="200" y="85" width="150" height="50" rx="8"/><text x="275" y="115" fill="#e8eefc" font-size="13" text-anchor="middle">Cloudflare Edge</text>
+              <rect x="410" y="85" width="130" height="50" rx="8"/><text x="475" y="115" fill="#e8eefc" font-size="13" text-anchor="middle">Model Router</text>
+              <rect x="600" y="20" width="140" height="44" rx="8"/><text x="670" y="47" fill="#e8eefc" font-size="12" text-anchor="middle">Groq / OpenRouter</text>
+              <rect x="600" y="80" width="140" height="44" rx="8"/><text x="670" y="107" fill="#e8eefc" font-size="12" text-anchor="middle">Local / Ollama</text>
+              <rect x="600" y="140" width="140" height="44" rx="8"/><text x="670" y="167" fill="#e8eefc" font-size="12" text-anchor="middle">Tools / Agents</text>
+              <rect x="790" y="85" width="95" height="50" rx="8"/><text x="837" y="115" fill="#e8eefc" font-size="12" text-anchor="middle">Firebase</text>
+            </g>
+            <g stroke="#7af6ff" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+              <path d="M140,110 L198,110"/>
+              <path d="M350,110 L408,110"/>
+              <path d="M540,105 L598,42"/>
+              <path d="M540,110 L598,102"/>
+              <path d="M540,115 L598,162"/>
+              <path d="M740,110 L788,110"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Stats band -->
+        <div class="stats">
+          <div><span class="k">Model routing</span><span class="v">12+ models</span></div>
+          <div><span class="k">Response time</span><span class="v">~400 ms avg</span></div>
+          <div><span class="k">Infrastructure</span><span class="v">Cloudflare Edge</span></div>
+          <div><span class="k">Cost</span><span class="v">Free-tier-first</span></div>
+        </div>
+
+        <p class="roadmap">Roadmap: <b>Edge Inference Kit</b> and <b>Ambient UI</b> are in development — the routing layer and the cinematic interface you're looking at are their first halves.</p>
       </div>
     </section>
 
-    <!-- 4. STORY / CRAFT -->
-    <section id="craft" class="panel">
-      <div class="card reveal">
-        <h2>Craft</h2>
-        <p>Built free-tier-first: Groq for dev inference, Cloudflare Workers for the edge,
-          Firebase for auth and realtime. Every choice optimised for speed, cost, and a
-          premium feel — no heavy frameworks where a sharp interface will do.</p>
-      </div>
-    </section>
-
-    <!-- 5. OWNER -->
+    <!-- 4. OWNER -->
     <section id="owner" class="panel">
       <div class="card reveal owner">
         <p class="eyebrow">Creator</p>
         <h2>Mokshith Reddy</h2>
-        <p class="role">Founder &amp; Owner of JARVIS AI</p>
-        <p>I build voice-first AI from the model up — the person behind JARVIS. This site is
-          the portfolio of that work: a cinematic, futuristic interface for an assistant meant
-          to feel less like software and more like a collaborator.</p>
+        <p class="role">Creator &amp; Lead Developer — JARVIS AI</p>
 
-        <form id="contact" class="contact" action="https://api.web3forms.com/submit" method="POST">
+        <div class="cols">
+          <div>
+            <h3>What I build</h3>
+            <ul class="spec">
+              <li>Voice-first AI assistants</li>
+              <li>Edge inference routing (multi-model)</li>
+              <li>Cinematic, motion-led chat interfaces</li>
+              <li>Native mobile (Jetpack Compose / Kotlin)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Technologies</h3>
+            <ul class="spec">
+              <li>Cloudflare Workers · Firebase · Groq</li>
+              <li>Three.js · WebGL · GSAP-style scroll</li>
+              <li>Kotlin · Jetpack Compose</li>
+              <li>Free-tier-first architecture</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Projects</h3>
+        <ul class="spec">
+          <li><b>JARVIS AI</b> — the assistant this site is the portfolio of</li>
+          <li><b>LinkUp Messenger</b> — Jetpack Compose + Firebase chat app</li>
+          <li><b>Edge Inference Kit</b> — model-router library (in development)</li>
+        </ul>
+
+        <h3>GitHub</h3>
+        <p><a class="link" href="https://github.com/mokshith7777" target="_blank" rel="noopener">github.com/mokshith7777</a></p>
+
+        <h3>Development philosophy</h3>
+        <p>Free-tier-first by default. Push latency and privacy to the edge. Treat the interface
+          as part of the product — calm, fast, and a little cinematic. Ship the system, not the
+          slogan.</p>
+      </div>
+    </section>
+
+    <!-- 5. CONTACT -->
+    <section id="contact" class="panel">
+      <div class="card reveal">
+        <p class="eyebrow">Get in touch</p>
+        <h2>Contact JARVIS' creator</h2>
+        <div class="socials">
+          <a href="https://github.com/mokshith7777" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:owner@jarvis.ai">Email</a>
+        </div>
+        <a class="cta big" href="https://jarvis-ai-3ba39.web.app" target="_blank" rel="noopener">Start a conversation →</a>
+
+        <form id="contact-form" class="contact" action="https://api.web3forms.com/submit" method="POST">
           <input type="hidden" name="access_key" value="7b1a7032-c9b9-40d4-82af-f47581a1d2b9" />
           <input type="hidden" name="subject" value="JARVIS AI portfolio contact" />
           <input type="text" name="name" placeholder="Your name" required />

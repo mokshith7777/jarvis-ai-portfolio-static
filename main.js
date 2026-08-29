@@ -164,7 +164,7 @@ computeScroll();
 // ---------------------------------------------------------------------------
 // Chapter text highlights + reveal cards
 // ---------------------------------------------------------------------------
-const chapters = ['home', 'about', 'work', 'craft', 'owner'];
+const chapters = ['home', 'why', 'work', 'owner', 'contact'];
 const navLinks = [...document.querySelectorAll('#nav a[data-target]')];
 const revealEls = [...document.querySelectorAll('.reveal')];
 const io = new IntersectionObserver((entries) => {
@@ -229,7 +229,7 @@ requestAnimationFrame(tick);
 // ---------------------------------------------------------------------------
 // Contact form (Web3Forms) — submit in-page, no redirect bounce
 // ---------------------------------------------------------------------------
-const form = document.getElementById('contact');
+const form = document.getElementById('contact-form');
 const note = document.getElementById('form-note');
 if (form) {
   form.addEventListener('submit', async (e) => {
