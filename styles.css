@@ -28,7 +28,13 @@ body {
   overflow: hidden;
 }
 #bg-image {
-  display: none; /* replaced by live 3D emblems (Arc Reactor + Spidey + Prabhas motifs) */
+  position: absolute;
+  inset: 0;
+  background: url("./reference/bg-frame.jpg") center / cover no-repeat;
+  opacity: 0.22;
+  filter: saturate(0.9) brightness(0.6) blur(6px);
+  transform: scale(1.08);
+  transition: opacity 1.2s ease;
 }
 #bg canvas { display: block; position: relative; z-index: 1; }
 
