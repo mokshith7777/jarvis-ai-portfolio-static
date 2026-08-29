@@ -27,15 +27,7 @@ body {
   background: radial-gradient(ellipse at 50% 40%, #0a1322 0%, var(--void) 70%);
   overflow: hidden;
 }
-#bg-image {
-  position: absolute;
-  inset: 0;
-  background: url("./reference/bg-ref3.jpg") center / cover no-repeat;
-  opacity: 0.24;
-  filter: saturate(0.85) brightness(0.55) blur(7px);
-  transform: scale(1.1);
-  transition: opacity 1.2s ease;
-}
+#bg-image { display: none; } /* backdrop now rendered inside WebGL (main.js backdrop plane) */
 #bg canvas { display: block; position: relative; z-index: 1; }
 
 /* Nav */

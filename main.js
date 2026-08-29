@@ -16,7 +16,21 @@ camera.position.set(0, 0, 7);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x000000, 0); // transparent so the CSS void gradient shows at edges
 bg.appendChild(renderer.domElement);
+
+// Backdrop plane: your cinematic reference image, far behind the reactor.
+// (Putting it IN the 3D scene so it's actually visible — the CSS #bg-image sits
+//  behind the opaque canvas and was never seen.)
+const texLoader = new THREE.TextureLoader();
+const backdropTex = texLoader.load('./reference/bg-ref3.jpg');
+backdropTex.colorSpace = THREE.SRGBColorSpace;
+const backdrop = new THREE.Mesh(
+  new THREE.PlaneGeometry(38, 22),
+  new THREE.MeshBasicMaterial({ map: backdropTex, transparent: true, opacity: 0.55, depthWrite: false })
+);
+backdrop.position.set(0, 0, -12);
+scene.add(backdrop);
 
 // ---------------------------------------------------------------------------
 // Procedural emblem textures (stylized homage sigils — swap for real images)
