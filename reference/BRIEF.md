@@ -62,7 +62,7 @@ grandeur) — a cinematic, futuristic, heroic centerpiece. Both elements animate
 1. **Hero** — 3D core + "JARVIS AI" wordmark + tagline (scroll camera sequence).
 2. **About JARVIS** — what the AI is, 2–3 short paragraphs.
 3. **Showcase** — project grid. Include **JARVIS AI**
-   (`https://jarvis-ai-3ba39.web.app`) + 2–3 others.
+   (`#`) + 2–3 others.
 4. **Story / Craft** — how it's built (edge inference, ambient UI, free-tier-first).
 5. **Owner** — *About the creator:* **Mokshith Reddy — Founder & Owner of JARVIS AI.**
    Short bio: builder of voice-first AI, the person behind JARVIS. This is the explicit
