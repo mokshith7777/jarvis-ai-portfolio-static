@@ -14,22 +14,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000, 0); // Transparent void
 
-// --- 6. Backdrop Plane (Reference Texture) ---
-// Ensure 'reference/arc-ref.jpg' exists relative to this file
-const textureLoader = new THREE.TextureLoader();
-textureLoader.load('reference/arc-ref.jpg', (texture) => {
-  const bgGeo = new THREE.PlaneGeometry(30, 20);
-  const bgMat = new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true,
-    opacity: 0.4,
-    depthWrite: false
-  });
-  const bgPlane = new THREE.Mesh(bgGeo, bgMat);
-  bgPlane.position.z = -14;
-  scene.add(bgPlane);
-});
-
+// (Backdrop reference plane removed per request)
 // --- Postprocessing (Bloom) ---
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(
