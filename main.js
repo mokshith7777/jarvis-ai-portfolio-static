@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 // --- Scene Setup ---
 const canvas = document.querySelector('#webgl-canvas');
@@ -13,15 +14,20 @@ const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000, 0); // Transparent void
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
 
-// (Backdrop reference plane removed per request)
+// --- Environment (realistic metal reflections) ---
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
 // --- Postprocessing (Bloom) ---
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.85, // strength (restrained)
-  0.4,  // radius
-  0.1   // threshold
+  0.9,   // strength
+  0.5,   // radius
+  0.12   // threshold
 );
 const composer = new EffectComposer(renderer);
 composer.addPass(renderScene);
@@ -29,49 +35,93 @@ composer.addPass(bloomPass);
 
 // --- Reactor Geometry ---
 const reactorGroup = new THREE.Group();
+reactorGroup.rotation.x = -0.28; // tilt for realistic 3D viewing angle
 scene.add(reactorGroup);
 
-// 1. Plasma Sphere (Core)
-const coreGeo = new THREE.SphereGeometry(0.5, 32, 32);
-const coreMat = new THREE.MeshBasicMaterial({ color: 0xff5a4a });
+// 1. Plasma Core (hot, emissive)
+const coreGeo = new THREE.SphereGeometry(0.55, 64, 64);
+const coreMat = new THREE.MeshStandardMaterial({
+  color: 0xff5a4a,
+  emissive: 0xff2a1a,
+  emissiveIntensity: 2.4,
+  roughness: 0.35,
+  metalness: 0.0
+});
 const core = new THREE.Mesh(coreGeo, coreMat);
 reactorGroup.add(core);
 
-// 2. Icosahedron Shell
-const shellGeo = new THREE.IcosahedronGeometry(0.8, 0);
+// 1b. White-hot center
+const innerGeo = new THREE.SphereGeometry(0.22, 32, 32);
+const innerMat = new THREE.MeshBasicMaterial({ color: 0xffe6dc });
+const inner = new THREE.Mesh(innerGeo, innerMat);
+reactorGroup.add(inner);
+
+// 2. Faint energy cage (icosahedron shell)
+const shellGeo = new THREE.IcosahedronGeometry(0.95, 1);
 const shellMat = new THREE.MeshStandardMaterial({
   color: 0x110000,
-  emissive: 0x330000,
+  emissive: 0x440000,
   wireframe: true,
   transparent: true,
-  opacity: 0.6
+  opacity: 0.3
 });
 const shell = new THREE.Mesh(shellGeo, shellMat);
 reactorGroup.add(shell);
 
-// 3. Dark Metal Torus Ring
-const ringGeo = new THREE.TorusGeometry(1.7, 0.15, 16, 100);
+// 3. Backing housing disc (recesses the core)
+const housingGeo = new THREE.CylinderGeometry(1.9, 1.9, 0.3, 64);
+const housingMat = new THREE.MeshStandardMaterial({
+  color: 0x15171c,
+  metalness: 0.95,
+  roughness: 0.35
+});
+const housing = new THREE.Mesh(housingGeo, housingMat);
+housing.rotation.x = Math.PI / 2;
+housing.position.z = -0.4;
+reactorGroup.add(housing);
+
+// 4. Outer polished metal ring
+const ringGeo = new THREE.TorusGeometry(1.85, 0.18, 32, 200);
 const ringMat = new THREE.MeshStandardMaterial({
-  color: 0x222222,
-  metalness: 0.9,
-  roughness: 0.2
+  color: 0x2a2d33,
+  metalness: 1.0,
+  roughness: 0.18,
+  envMapIntensity: 1.4
 });
 const ring = new THREE.Mesh(ringGeo, ringMat);
 reactorGroup.add(ring);
 
-// 4. Thin Red Accent Torus
-const accentGeo = new THREE.TorusGeometry(1.32, 0.02, 16, 100);
+// 5. Segmented paddle ring (arc reactor signature, 12 segments)
+const segGroup = new THREE.Group();
+const segGeo = new THREE.BoxGeometry(0.16, 0.55, 0.14);
+const segMat = new THREE.MeshStandardMaterial({
+  color: 0x3a3d44,
+  metalness: 1.0,
+  roughness: 0.22,
+  envMapIntensity: 1.2
+});
+for (let i = 0; i < 12; i++) {
+  const s = new THREE.Mesh(segGeo, segMat);
+  const a = (i / 12) * Math.PI * 2;
+  s.position.set(Math.cos(a) * 1.5, Math.sin(a) * 1.5, 0);
+  s.rotation.z = a;
+  segGroup.add(s);
+}
+reactorGroup.add(segGroup);
+
+// 6. Thin red accent torus
+const accentGeo = new THREE.TorusGeometry(1.3, 0.02, 16, 160);
 const accentMat = new THREE.MeshBasicMaterial({ color: 0xff3b4e });
 const accentRing = new THREE.Mesh(accentGeo, accentMat);
 reactorGroup.add(accentRing);
 
-// 4b. Blue Holographic Secondary Accent (per design spec)
+// 7. Blue holographic secondary ring
 const holoGeo = new THREE.TorusGeometry(1.05, 0.015, 16, 120);
 const holoMat = new THREE.MeshBasicMaterial({ color: 0x4f9dff, transparent: true, opacity: 0.55 });
 const holoRing = new THREE.Mesh(holoGeo, holoMat);
 reactorGroup.add(holoRing);
 
-// 5. Particle Dust
+// 8. Particle Dust
 const dustGeo = new THREE.BufferGeometry();
 const dustCount = 1400;
 const posArray = new Float32Array(dustCount * 3);
@@ -90,25 +140,25 @@ const dust = new THREE.Points(dustGeo, dustMat);
 scene.add(dust);
 
 // --- Lighting ---
-const ambientLight = new THREE.AmbientLight(0x220000, 1.5);
+const ambientLight = new THREE.AmbientLight(0x332222, 0.6);
 scene.add(ambientLight);
 
-const keyLight = new THREE.DirectionalLight(0xffffff, 1);
-keyLight.position.set(2, 2, 5);
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+keyLight.position.set(3, 4, 5);
 scene.add(keyLight);
 
-const rimLight = new THREE.PointLight(0xff3b30, 5, 10);
-rimLight.position.set(0, 0, -2);
+const rimLight = new THREE.PointLight(0xff3b30, 6, 14);
+rimLight.position.set(0, 0, -1.5);
 scene.add(rimLight);
 
-const fillLight = new THREE.DirectionalLight(0xffb86b, 0.3);
-fillLight.position.set(-2, -1, 3);
-scene.add(fillLight);
-
-// 5b. Blue Holographic rim accent (secondary)
-const holoLight = new THREE.PointLight(0x4f9dff, 2.2, 12);
-holoLight.position.set(2.5, -1.5, 1);
+const holoLight = new THREE.PointLight(0x4f9dff, 2.4, 14);
+holoLight.position.set(2.5, -1.5, 1.5);
 scene.add(holoLight);
+
+// light spilling from the hot core
+const coreLight = new THREE.PointLight(0xff5a4a, 3, 8);
+coreLight.position.set(0, 0, 0.6);
+reactorGroup.add(coreLight);
 
 // --- Interaction & Animation ---
 let scrollY = window.scrollY;
@@ -139,39 +189,38 @@ function animate() {
   requestAnimationFrame(animate);
   const elapsedTime = clock.getElapsedTime();
 
-  // Continuous gentle pulse & spin
   if (!prefersReducedMotion) {
-    shell.rotation.y += 0.005;
-    shell.rotation.x += 0.002;
-    ring.rotation.z -= 0.003;
+    // core pulse + hot center
+    const pulse = Math.sin(elapsedTime * 2) * 0.08 + 1;
+    core.scale.set(pulse, pulse, pulse);
+    inner.scale.setScalar(0.9 + Math.sin(elapsedTime * 3) * 0.1);
+    coreMat.emissiveIntensity = 2.2 + Math.sin(elapsedTime * 2) * 0.4;
+
+    // rings spin at different rates for depth
+    ring.rotation.z -= 0.004;
+    segGroup.rotation.z += 0.006;
     accentRing.rotation.z += 0.005;
     holoRing.rotation.y -= 0.008;
     holoRing.rotation.z += 0.004;
+    shell.rotation.y += 0.005;
+    shell.rotation.x += 0.002;
 
-    // Core Pulse
-    const pulse = Math.sin(elapsedTime * 2) * 0.1 + 1;
-    core.scale.set(pulse, pulse, pulse);
-
-    // Dust float
     dust.rotation.y = elapsedTime * 0.02;
   }
 
-  // Scroll pushes camera in (z: 7 -> ~3.8) and slowly rotates core
+  // Scroll pushes camera in (z: 7 -> ~3.8)
   const maxScroll = document.body.scrollHeight - window.innerHeight;
   const scrollRatio = maxScroll > 0 ? scrollY / maxScroll : 0;
-
   const targetZ = 7 - (scrollRatio * 3.2);
   camera.position.z += (targetZ - camera.position.z) * 0.05;
-  reactorGroup.rotation.y = scrollRatio * Math.PI;
+  reactorGroup.rotation.y = scrollRatio * Math.PI * 0.5;
 
-  // Pointer move parallax
+  // Pointer parallax (subtle 3D viewing)
   if (!prefersReducedMotion) {
-    const targetX = mouseX * 2;
-    const targetY = -mouseY * 2;
+    const targetX = mouseX * 1.6;
+    const targetY = -mouseY * 1.6;
     camera.position.x += (targetX - camera.position.x) * 0.05;
     camera.position.y += (targetY - camera.position.y) * 0.05;
-
-    reactorGroup.rotation.x += (-mouseY * 0.5 - reactorGroup.rotation.x) * 0.05;
   }
 
   composer.render();
@@ -183,19 +232,11 @@ animate();
 const sections = document.querySelectorAll('.section');
 const navLinks = document.querySelectorAll('.nav-links a');
 
-const observerOptions = {
-  root: null,
-  threshold: 0.3,
-};
-
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      // Reveal card
       const card = entry.target.querySelector('.fade-in');
       if (card) card.classList.add('visible');
-
-      // Update Nav
       navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href').substring(1) === entry.target.id) {
@@ -204,7 +245,7 @@ const observer = new IntersectionObserver((entries) => {
       });
     }
   });
-}, observerOptions);
+}, { root: null, threshold: 0.3 });
 
 sections.forEach(section => observer.observe(section));
 
