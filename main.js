@@ -80,6 +80,12 @@ const accentMat = new THREE.MeshBasicMaterial({ color: 0xff3b4e });
 const accentRing = new THREE.Mesh(accentGeo, accentMat);
 reactorGroup.add(accentRing);
 
+// 4b. Blue Holographic Secondary Accent (per design spec)
+const holoGeo = new THREE.TorusGeometry(1.05, 0.015, 16, 120);
+const holoMat = new THREE.MeshBasicMaterial({ color: 0x4f9dff, transparent: true, opacity: 0.55 });
+const holoRing = new THREE.Mesh(holoGeo, holoMat);
+reactorGroup.add(holoRing);
+
 // 5. Particle Dust
 const dustGeo = new THREE.BufferGeometry();
 const dustCount = 1400;
@@ -113,6 +119,11 @@ scene.add(rimLight);
 const fillLight = new THREE.DirectionalLight(0xffb86b, 0.3);
 fillLight.position.set(-2, -1, 3);
 scene.add(fillLight);
+
+// 5b. Blue Holographic rim accent (secondary)
+const holoLight = new THREE.PointLight(0x4f9dff, 2.2, 12);
+holoLight.position.set(2.5, -1.5, 1);
+scene.add(holoLight);
 
 // --- Interaction & Animation ---
 let scrollY = window.scrollY;
@@ -149,6 +160,8 @@ function animate() {
     shell.rotation.x += 0.002;
     ring.rotation.z -= 0.003;
     accentRing.rotation.z += 0.005;
+    holoRing.rotation.y -= 0.008;
+    holoRing.rotation.z += 0.004;
 
     // Core Pulse
     const pulse = Math.sin(elapsedTime * 2) * 0.1 + 1;
