@@ -12,10 +12,9 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a0a);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.z = 7;
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.getElementById('webgl-canvas') });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-document.getElementById('three-js-container').appendChild(renderer.domElement);
 
 // Lights
 const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
